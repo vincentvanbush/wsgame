@@ -1,4 +1,5 @@
-console.log 'ebin'
+#= require cable
+
 @App.messages = @App.cable.subscriptions.create 'MessagesChannel',
   received: (data) ->
     $('#messages').removeClass('hidden')
