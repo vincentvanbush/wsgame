@@ -6,3 +6,8 @@ form#new_message * {
     }
   }
 }
+
+#messages {
+  max-height: 500px;
+  overflow-y: scroll;
+}

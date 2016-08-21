@@ -12,9 +12,11 @@ module GamesHelper
       compact.to_sentence(two_words_connector: ' vs. ')
   end
 
-  def game_link(game)
-    if game.can_be_joined?
-      link_to 'Spectate or Join', game
+  def game_link(game, user)
+    if game.can_be_joined? && !user.in_game?
+      link_to 'Spectate or join', game
+    elsif game.players.include?(user)
+      link_to 'Return to game', game
     else
       link_to 'Spectate', game
     end
