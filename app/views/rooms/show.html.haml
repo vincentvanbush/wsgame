@@ -1,0 +1,22 @@
+%input#room_id{ type: "hidden", value: @room.id }
+%input#user_uuid{ type: "hidden", value: @user.uuid }
+.row
+  .col-md-12
+    %h1= @room.name
+
+.row.extra-space-top
+  .col-md-8
+    .panel.panel-primary
+      .panel-heading
+        Games in
+        %b= @room.name
+  .col-md-4
+    .panel.panel-default
+      .panel-heading
+        Chat
+      - if @room.messages.any?
+        #messages.panel-body
+          = render partial: 'messages/message', collection: @room.messages
+      - else
+        #messages.panel-body.hidden
+    = render partial: 'messages/message_form', locals: { message: @message, room: @room }

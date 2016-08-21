@@ -1,7 +1,5 @@
 = simple_form_for message, remote: true, authenticity_token: true do |f|
   = f.hidden_field :room_id, value: room.id
   .row
-    .col-sm-11
-      = f.input :content, label: false, placeholder: 'Say something...'
-    .col-sm-1
-    = f.button :submit, "Send", class: "btn btn-primary"
+    .col-xs-8= f.input :content, label: false, placeholder: 'Say something...'
+    .col-xs-4.submit-wrapper= f.button :submit, "Send", class: "btn btn-primary"
