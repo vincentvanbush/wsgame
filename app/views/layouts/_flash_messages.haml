@@ -1,0 +1,7 @@
+.row
+  - if flash.any?
+    - class_mapping = { 'success' => 'alert-success', 'info' => 'alert-info',
+                        'warning' => 'alert-warning', 'danger' => 'alert-danger',
+                        'notice' => 'alert-success', 'alert' => 'alert-danger' }
+    - flash.each do |key, value|
+      .alert{class: class_mapping[key]}= value

@@ -1,0 +1,6 @@
+.row
+  %h1.text-center Wanna play this awesome game?
+.row.text-center
+  = simple_form_for @user, url: login_users_path, html: { class: 'form-inline' } do |f|
+    = f.input :username, placeholder: 'Nickname', label: false
+    = f.button :submit, class: 'btn-primary'
