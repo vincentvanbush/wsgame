@@ -7,4 +7,18 @@ class User < ApplicationRecord
   def to_s
     username
   end
+
+  def current_game
+    current_games.first
+  end
+
+  def in_game?
+    current_game.present?
+  end
+
+  private
+
+  def current_games
+    Game.where('player1_id = ? or player2_id = ?', id, id)
+  end
 end

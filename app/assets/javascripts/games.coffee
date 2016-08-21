@@ -1,3 +1,6 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
+gameReady = ->
+  $('.in-game-remove').on 'ajax:success', ->
+    Turbolinks.visit("/rooms/#{$('#room_name').val()}")
+
+$(document).on 'turbolinks:load', ->
+  gameReady()

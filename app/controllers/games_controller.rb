@@ -7,6 +7,8 @@ class GamesController < ApplicationController
         msg_type: 'new_game',
         message: '___new game created___',
         user: current_user.username,
+        uuid: current_user.uuid,
+        game_id: game.id,
         partial: self.render(partial: 'rooms/game', locals: { game: game })
       head :ok
     end
@@ -25,5 +27,9 @@ class GamesController < ApplicationController
   end
 
   def show
+    @game = Game.find(params[:id])
+    @user = current_user
+    @message = Message.new
+    @room = @game.room
   end
 end

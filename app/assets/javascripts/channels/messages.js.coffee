@@ -15,9 +15,12 @@ $ ->
 
     renderMessage: (data) ->
       if data.msg_type == 'new_game'
-        $('#games > .row').append(data.partial)
+        if data.uuid == uuid
+          Turbolinks.visit("/games/#{data.game_id}")
+        else
+          $('#games > .row').append(data.partial)
       else if data.msg_type == 'update_game'
-
+        # TODO
       else if data.msg_type == 'delete_game'
         $("[data-game='#{data.game_id}']").remove()
       else

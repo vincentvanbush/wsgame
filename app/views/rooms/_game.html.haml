@@ -2,9 +2,5 @@
   .panel{ class: panel_class(game) }
     .panel-heading
       %b= game_heading(game)
-      -# - if [game.player1, game.player2].include? current_user
-      -#   = link_to game, method: :delete, remote: true, data: { confirm: 'Sure?' }, class: 'pull-right' do
-      -#     %span.glyphicon.glyphicon-remove
-      -#     Remove
     .panel-body
       = game_link(game)

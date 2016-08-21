@@ -1,8 +1,6 @@
 %input#room_id{ type: "hidden", value: @room.id }
 %input#user_uuid{ type: "hidden", value: @user.uuid }
-.row
-  .col-md-12
-    %h1= @room.name
+= render 'header'
 
 .row.extra-space-top
   .col-md-8
@@ -16,10 +14,4 @@
       .panel-body#games
         .row= render partial: 'game', collection: @room.games
   .col-md-4
-    .panel.panel-default
-      .panel-heading
-        Chat
-      .panel-body#messages
-        = render partial: 'messages/message', collection: @room.messages
-
-    = render partial: 'messages/message_form', locals: { message: @message, room: @room }
+    = render partial: 'chat'
