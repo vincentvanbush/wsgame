@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160820202852) do
+ActiveRecord::Schema.define(version: 20160821141613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "games", force: :cascade do |t|
+    t.integer  "room_id",                     null: false
+    t.string   "state",      default: "idle", null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "player1_id"
+    t.integer  "player2_id"
+    t.index ["player1_id"], name: "index_games_on_player1_id", using: :btree
+    t.index ["player2_id"], name: "index_games_on_player2_id", using: :btree
+    t.index ["room_id"], name: "index_games_on_room_id", using: :btree
+  end
 
   create_table "messages", force: :cascade do |t|
     t.integer  "user_id"
@@ -38,6 +50,9 @@ ActiveRecord::Schema.define(version: 20160820202852) do
     t.string   "uuid"
   end
 
+  add_foreign_key "games", "rooms"
+  add_foreign_key "games", "users", column: "player1_id"
+  add_foreign_key "games", "users", column: "player2_id"
   add_foreign_key "messages", "rooms"
   add_foreign_key "messages", "users"
 end
