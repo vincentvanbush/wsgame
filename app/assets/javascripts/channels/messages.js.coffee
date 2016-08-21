@@ -11,8 +11,15 @@ $ ->
 
     received: (data) ->
       $('#messages').removeClass('hidden')
-      $('#messages').append(@renderMessage(data))
+      @renderMessage(data)
 
     renderMessage: (data) ->
-      "<p><b>#{data.user}</b>: #{data.message}</p>"
+      if data.msg_type == 'new_game'
+        $('#games > .row').append(data.partial)
+      else if data.msg_type == 'update_game'
+
+      else if data.msg_type == 'delete_game'
+        $("[data-game='#{data.game_id}']").remove()
+      else
+        $('#messages').append("<p><b>#{data.user}</b>: #{data.message}</p>")
   )

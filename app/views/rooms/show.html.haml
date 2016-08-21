@@ -10,13 +10,16 @@
       .panel-heading
         Games in
         %b= @room.name
+        = link_to room_games_path(room_name: @room.name), method: :post, remote: true, class: 'pull-right btn btn-success btn-xs btn-default' do
+          %span.glyphicon.glyphicon-plus
+          Create Game
+      .panel-body#games
+        .row= render partial: 'game', collection: @room.games
   .col-md-4
     .panel.panel-default
       .panel-heading
         Chat
-      - if @room.messages.any?
-        #messages.panel-body
-          = render partial: 'messages/message', collection: @room.messages
-      - else
-        #messages.panel-body.hidden
+      .panel-body#messages
+        = render partial: 'messages/message', collection: @room.messages
+
     = render partial: 'messages/message_form', locals: { message: @message, room: @room }
