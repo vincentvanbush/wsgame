@@ -8,7 +8,7 @@
       .panel-heading
         Games in
         %b= @room.name
-        = link_to room_games_path(room_name: @room.name), method: :post, remote: true, class: 'pull-right btn btn-success btn-xs btn-default' do
+        = link_to room_games_path(room_name: @room.name), method: :post, remote: true, id: 'create_game', class: 'capture-error pull-right btn btn-success btn-xs btn-default' do
           %span.glyphicon.glyphicon-plus
           Create Game
       .panel-body#games

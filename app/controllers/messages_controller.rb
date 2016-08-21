@@ -10,6 +10,9 @@ class MessagesController < ApplicationController
         message: message.content,
         user: message.user.username
       head :ok
+    else
+      render status: 422,
+             json: { error: message.errors.full_messages.to_sentence }
     end
   end
 

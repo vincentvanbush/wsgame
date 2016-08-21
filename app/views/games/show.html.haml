@@ -17,5 +17,7 @@
             = link_to @game, method: :delete, remote: true, data: { confirm: 'Sure?' }, class: 'in-game-remove pull-right btn btn-danger btn-xs btn-default' do
               %span.glyphicon.glyphicon-remove
               Remove
+      .panel-body
+        ebin
   .col-md-4
     = render partial: 'rooms/chat'

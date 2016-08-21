@@ -11,6 +11,9 @@ class GamesController < ApplicationController
         game_id: game.id,
         partial: self.render(partial: 'rooms/game', locals: { game: game })
       head :ok
+    else
+      render status: 422,
+             json: { error: game.errors.full_messages.to_sentence }
     end
   end
 

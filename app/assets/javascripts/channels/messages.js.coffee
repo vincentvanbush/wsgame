@@ -1,4 +1,5 @@
 $ ->
+  @scroll_msgs_down()
   room_id = $('#room_id').val()
   uuid = $('#user_uuid').val()
 
@@ -25,4 +26,5 @@ $ ->
         $("[data-game='#{data.game_id}']").remove()
       else
         $('#messages').append("<p><b>#{data.user}</b>: #{data.message}</p>")
+        window.scroll_msgs_down()
   )

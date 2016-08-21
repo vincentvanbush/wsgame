@@ -15,6 +15,9 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require turbolinks
+//= require global
 //= require cable
 //= require_tree ./channels
 //= require_tree .
+
+// $.turbo.use('turbolinks:load')
