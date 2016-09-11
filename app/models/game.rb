@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: games
+#
+#  id         :integer          not null, primary key
+#  room_id    :integer          not null
+#  state      :string           default("idle"), not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  player1_id :integer
+#  player2_id :integer
+#
+
 class Game < ApplicationRecord
   belongs_to :room
   belongs_to :player1, class_name: 'User', optional: true
@@ -5,6 +18,8 @@ class Game < ApplicationRecord
 
   validates :state, presence: true, inclusion: { in: %w(idle started) }
   validate :users_in_one_game
+
+  serialize :board, Board
 
   def can_be_joined?
     state == 'idle' && (player1.blank? || player2.blank?)

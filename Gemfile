@@ -42,6 +42,7 @@ group :development, :test do
   gem 'pry-nav'
   gem 'factory_girl_rails'
   gem 'dotenv'
+  gem 'annotate'
 end
 
 group :test do

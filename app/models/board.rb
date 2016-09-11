@@ -1,0 +1,84 @@
+class Board
+  include ActiveModel::Validations
+
+  MAX = 15
+  LEN = 5
+
+  def initialize(board_hash = {})
+    unless board_hash.is_a? Hash
+      raise ArgumentError, 'Pass a hash as an argument'
+    end
+
+    unless board_hash.all? do |k, v|
+             k.is_a?(Integer) && k.between?(0, MAX - 1) && v.is_a?(Hash)
+           end
+      raise ArgumentError, 'Pass a hash with integer keys and hash values'
+    end
+
+    unless board_hash.values.all? do |v|
+             v.keys.all? do |k|
+               k.is_a?(Integer) &&
+               v.values.all? { |vv| [:white, :black].include?(vv) }
+             end
+           end
+      raise ArgumentError,
+            'Inner hashes must have integer keys and :white/:black values'
+    end
+
+    @board_hash = board_hash
+  end
+
+  def [](a, b)
+    @board_hash.dig(a, b)
+  end
+
+  def []=(a, b, x)
+    validate_move(a, b, x)
+    @board_hash[a] ||= []
+    @board_hash[a][b] = x
+  end
+
+  def validate_move(a, b, _x)
+    raise TakenError, "#{a}:#{b} is taken" if taken?(a, b)
+    raise GameOverError, 'Game is already over' if game_over?
+  end
+
+  def game_over?
+    winner.present?
+  end
+
+  def winner
+    # This is very suboptimal but who cares lol
+    all_xy_pairs.each do |coords|
+      startx, starty = coords
+      v = self[startx, starty]
+      next if v.nil?
+      horiz = (0..4).map { |i| self[startx, starty + i] }
+      vert = (0..4).map { |i| self[startx + i, starty] }
+      diag1 = (0..4).map { |i| self[startx + i, starty + i] }
+      diag2 = (0..4).map { |i| self[startx + i, starty - i] }
+      if [horiz, vert, diag1, diag2].find { |list| list.all? { |x| x == v } }
+        return v
+      end
+    end
+    nil
+  end
+
+  def free?(a, b)
+    self[a, b].nil?
+  end
+
+  def taken?(a, b)
+    !free?(a, b)
+  end
+
+  def to_h
+    @board_hash
+  end
+
+  private
+
+  def all_xy_pairs
+    (0...MAX * MAX).map { |x| [x / MAX, x % MAX] }
+  end
+end
