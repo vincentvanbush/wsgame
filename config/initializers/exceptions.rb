@@ -1,2 +1,3 @@
-class TakenError < StandardError; end
-class GameOverError < StandardError; end
+class GameError < StandardError; end
+class TakenError < GameError; end
+class GameOverError < GameError; end

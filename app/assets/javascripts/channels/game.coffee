@@ -1,9 +1,13 @@
-App.game = App.cable.subscriptions.create "GameChannel",
-  connected: ->
-    # Called when the subscription is ready for use on the server
+$ ->
+  game_id = $('#game_id').val()
 
-  disconnected: ->
-    # Called when the subscription has been terminated by the server
+  if game_id
+    App.game = App.cable.subscriptions.create(
+      {
+        channel: "GameChannel"
+        game: game_id
+      }
 
-  received: (data) ->
-    # Called when there's incoming data on the websocket for this channel
+      received: (data) ->
+        alert("x=#{data.x} y=#{data.y}") # TODO something more sophisticated
+    )

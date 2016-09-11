@@ -14,5 +14,9 @@ Rails.application.routes.draw do
       post 'login'
     end
   end
-  resources :games
+  resources :games do
+    member do
+      post :push_move
+    end
+  end
 end

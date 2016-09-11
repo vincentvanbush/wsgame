@@ -1,5 +1,6 @@
 $ ->
   @scroll_msgs_down()
+ 
   room_id = $('#room_id').val()
   uuid = $('#user_uuid').val()
 

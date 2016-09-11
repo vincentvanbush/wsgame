@@ -29,19 +29,19 @@ class Board
   end
 
   def [](a, b)
-    @board_hash.dig(a, b)
+    @board_hash.dig(a.to_i, b.to_i)
   end
 
   def []=(a, b, x)
-    validate_move(a, b, x)
-    @board_hash[a] ||= []
-    @board_hash[a][b] = x
+    validate_move(a.to_i, b.to_i, x)
+    @board_hash[a.to_i] ||= []
+    @board_hash[a.to_i][b.to_i] = x
   end
 
   def validate_move(a, b, x)
     raise ArgumentError,
           "#{x} is not :white or :black" if [:white, :black].exclude?(x)
-    raise TakenError, "#{a}:#{b} is taken" if taken?(a, b)
+    raise TakenError, "#{a}:#{b} is taken" if taken?(a.to_i, b.to_i)
     raise GameOverError, 'Game is already over' if game_over?
   end
 

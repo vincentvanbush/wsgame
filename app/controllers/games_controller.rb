@@ -29,10 +29,38 @@ class GamesController < ApplicationController
     end
   end
 
+  def push_move
+    @game = Game.find(params[:id])
+    x, y = move_params[:x], move_params[:y]
+    @game.board[x, y] = current_color
+    @game.save!
+    ActionCable.server.broadcast "game_#{@game.id}",
+      msg_type: 'move',
+      user: current_user.username,
+      x: x,
+      y: y
+    head :no_content
+  rescue GameError => e
+    ActionCable.server.broadcast "private_user:#{current_user.uuid}",
+      msg_type: 'illegal_move',
+      message: e.message
+    head :unprocessable_identity
+  end
+
   def show
     @game = Game.find(params[:id])
     @user = current_user
     @message = Message.new
     @room = @game.room
+  end
+
+  private
+
+  def move_params
+    params.permit(:x, :y)
+  end
+
+  def current_color
+    current_user.id == @game.player1_id ? :white : :black
   end
 end
