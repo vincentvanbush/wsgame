@@ -38,7 +38,9 @@ class Board
     @board_hash[a][b] = x
   end
 
-  def validate_move(a, b, _x)
+  def validate_move(a, b, x)
+    raise ArgumentError,
+          "#{x} is not :white or :black" if [:white, :black].exclude?(x)
     raise TakenError, "#{a}:#{b} is taken" if taken?(a, b)
     raise GameOverError, 'Game is already over' if game_over?
   end
@@ -57,7 +59,7 @@ class Board
       vert = (0..4).map { |i| self[startx + i, starty] }
       diag1 = (0..4).map { |i| self[startx + i, starty + i] }
       diag2 = (0..4).map { |i| self[startx + i, starty - i] }
-      if [horiz, vert, diag1, diag2].find { |list| list.all? { |x| x == v } }
+      if [horiz, vert, diag1, diag2].any? { |list| list.all? { |x| x == v } }
         return v
       end
     end
