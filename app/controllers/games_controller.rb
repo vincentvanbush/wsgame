@@ -37,6 +37,7 @@ class GamesController < ApplicationController
     ActionCable.server.broadcast "game_#{@game.id}",
       msg_type: 'move',
       user: current_user.username,
+      color: current_color,
       x: x,
       y: y
     head :no_content
@@ -44,7 +45,17 @@ class GamesController < ApplicationController
     ActionCable.server.broadcast "private_user:#{current_user.uuid}",
       msg_type: 'illegal_move',
       message: e.message
-    head :unprocessable_identity
+    head 422
+  end
+
+  def board
+    game = Game.find(params[:id])
+    white_coords = game.board.coords_of :white
+    black_coords = game.board.coords_of :black
+    render json: {
+      white: white_coords,
+      black: black_coords
+    }
   end
 
   def show

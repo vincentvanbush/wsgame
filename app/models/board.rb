@@ -49,6 +49,13 @@ class Board
     winner.present?
   end
 
+  def coords_of(color)
+    @board_hash.
+      map { |k, v| [k, v.each_with_index.map { |x, i| x == color ? i : nil }.compact] }.
+      map { |a| a.second.zip([a.first] * a.second.size).map(&:reverse) }.
+      flatten.each_slice(2).to_a
+  end
+
   def winner
     # This is very suboptimal but who cares lol
     all_xy_pairs.each do |coords|

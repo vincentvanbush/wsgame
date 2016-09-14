@@ -9,5 +9,7 @@ $ ->
       }
 
       received: (data) ->
-        alert("x=#{data.x} y=#{data.y}") # TODO something more sophisticated
+        window.game.drawStone data.color,
+          x: data.x
+          y: data.y
     )
