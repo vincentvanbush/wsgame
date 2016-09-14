@@ -3,16 +3,19 @@ subscribe_messages = ->
   uuid = $('#user_uuid').val()
 
   if App.messages
-    App.cable.subscriptions.remove(App.messages)
     App.messages.unsubscribe()
+    App.cable.subscriptions.remove(App.messages)
     App.messages = undefined
 
-  if room_id && uuid
+  if room_id && uuid && !App.messages
     App.messages = App.cable.subscriptions.create(
       {
         channel: 'MessagesChannel'
         room: room_id
         user: uuid
+        foo: Math.random().toString() # no fucking idea why, but without this,
+                                      # after removing and re-creating a subscription, all the
+                                      # previously removed ones magically come back :/
       }
 
       received: (data) ->
@@ -32,6 +35,9 @@ subscribe_messages = ->
         else
           $('#messages').append("<p><b>#{data.user}</b>: #{data.message}</p>")
           window.scroll_msgs_down()
+
+      disconnected: (data) ->
+        alert('ebin')
     )
 
 $ ->
