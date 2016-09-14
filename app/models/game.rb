@@ -34,6 +34,17 @@ class Game < ApplicationRecord
     [player1, player2].compact
   end
 
+  def leave!(user)
+    leaving_player = if user.id == player1_id
+                       :player1
+                     elsif user.id == player2_id
+                       :player2
+                     end
+    left = leaving_player && update(leaving_player => nil)
+    destroy if players.blank?
+    left
+  end
+
   private
 
   def users_in_one_game

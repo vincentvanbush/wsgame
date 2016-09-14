@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resources :games do
     member do
       post :push_move
+      patch :leave
       get :board
     end
   end

@@ -2,7 +2,6 @@ subscribe_private = ->
   uuid = $('#user_uuid').val()
 
   if uuid && !App.private
-    console.log "Creating App.private, uuid #{uuid}"
 
     App.private = App.cable.subscriptions.create(
       {

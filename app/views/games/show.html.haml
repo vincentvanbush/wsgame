@@ -11,13 +11,12 @@
         %b= "##{@game.id} (#{@room.name})"
         = link_to room_path(name: @room.name), class: 'pull-right btn btn-info btn-xs btn-default' do
           %span.glyphicon.glyphicon-arrow-left
-          Back to
+          See
           %b= @room.name
-        - if Rails.env.development? # TODO: remove this
-          - if [@game.player1, @game.player2].include? current_user
-            = link_to @game, method: :delete, remote: true, data: { confirm: 'Sure?' }, class: 'in-game-remove pull-right btn btn-danger btn-xs btn-default' do
-              %span.glyphicon.glyphicon-remove
-              Remove
+        - if [@game.player1, @game.player2].include? current_user
+          = link_to leave_game_path(@game), method: :patch, class: 'in-game-remove pull-right btn btn-warning btn-xs btn-default' do
+            %span.glyphicon.glyphicon-remove
+            Leave
       .panel-body.text-center
         %canvas#gomoku-board
   .col-md-4

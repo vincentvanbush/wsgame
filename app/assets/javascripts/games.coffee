@@ -110,9 +110,6 @@ class Game
     @context.fill()
     @context.closePath()
 
-    console.log stonePos
-
-
 
 $(document).on 'turbolinks:load', ->
   gameReady()

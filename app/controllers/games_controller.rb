@@ -18,13 +18,10 @@ class GamesController < ApplicationController
   end
 
   def destroy
-    game = Game.find(params[:id])
-    if game.destroy
-      ActionCable.server.broadcast "messages_room:#{game.room.id}",
-        msg_type: 'delete_game',
-        message: '___game deleted___',
-        user: current_user.username,
-        game_id: game.id
+    @game = Game.find(params[:id])
+    @room = @game.room
+    if @game.destroy
+      cable_game_destroy
       head :no_content
     end
   end
@@ -77,6 +74,27 @@ class GamesController < ApplicationController
     redirect_to rooms_path
   end
 
+  def leave
+    @game = Game.find(params[:id])
+    @room = @game.room
+    @user = current_user
+    if @game.leave!(@user)
+      # tell the other player and spectators
+      ActionCable.server.broadcast "game_#{@game.id}",
+        msg_type: 'leave',
+        user: current_user.username
+      # notify room
+      if @game.destroyed?
+        cable_game_destroy
+      else
+        cable_game_update
+      end
+      redirect_to room_path(@game.room.name)
+    else
+      head 422
+    end
+  end
+
   private
 
   def move_params
@@ -111,11 +129,23 @@ class GamesController < ApplicationController
         msg_type: 'join',
         user: current_user.username
       # notify everyone in the room
-      ActionCable.server.broadcast "messages_room:#{@room.id}",
-        msg_type: 'update_game',
-        message: '___game updated___',
-        game_id: @game.id,
-        partial: self.render(partial: 'rooms/game', locals: { game: @game, user: nil })
+      cable_game_update
     end
+  end
+
+  def cable_game_update
+    ActionCable.server.broadcast "messages_room:#{@room.id}",
+      msg_type: 'update_game',
+      message: '___game updated___',
+      game_id: @game.id,
+      partial: ApplicationController.render(partial: 'rooms/game', locals: { game: @game, user: nil })
+  end
+
+  def cable_game_destroy
+    ActionCable.server.broadcast "messages_room:#{@room.id}",
+      msg_type: 'delete_game',
+      message: '___game deleted___',
+      user: current_user.username,
+      game_id: @game.id
   end
 end
