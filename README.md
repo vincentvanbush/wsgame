@@ -1,6 +1,6 @@
 # wsgame
 
-A *very* simple app, pretty much solely an exercise on Rails 5-flavoured WebSockets. It's being created as an overdue university assignment so don't expect any fireworks let alone specs. It's probably going to be a rendition of a board game, but which one? I haven't decided yet. Gah, If I'm lazy enough it might well end up as a tic-tac-toe.
+A *very* simple app, pretty much solely an exercise on Rails 5-flavoured WebSockets. It's being created as an overdue university assignment so don't expect any fireworks let alone specs. ~~It's probably going to be a rendition of a board game, but which one? I haven't decided yet. Gah, If I'm lazy enough it might well end up as a tic-tac-toe.~~ Actually it's not gone far from there as this ended up as [*gomoku*](https://en.wikipedia.org/wiki/Gomoku). 
 
 # Requirements
 
