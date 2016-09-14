@@ -9,6 +9,8 @@
 #  updated_at :datetime         not null
 #  player1_id :integer
 #  player2_id :integer
+#  board      :text
+#  game_over  :boolean
 #
 
 class Game < ApplicationRecord
@@ -20,6 +22,9 @@ class Game < ApplicationRecord
   validate :users_in_one_game
 
   serialize :board, Board
+
+  scope :not_over, -> { where(game_over: false) }
+  scope :over, -> { where(game_over: true) }
 
   def can_be_joined?
     state == 'idle' && (player1.blank? || player2.blank?)

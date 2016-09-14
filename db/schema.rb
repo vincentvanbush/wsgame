@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160911152235) do
+ActiveRecord::Schema.define(version: 20160914123803) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 20160911152235) do
     t.integer  "player1_id"
     t.integer  "player2_id"
     t.text     "board"
+    t.boolean  "game_over",  default: false
     t.index ["player1_id"], name: "index_games_on_player1_id", using: :btree
     t.index ["player2_id"], name: "index_games_on_player2_id", using: :btree
     t.index ["room_id"], name: "index_games_on_room_id", using: :btree
