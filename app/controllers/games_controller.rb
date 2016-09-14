@@ -9,7 +9,7 @@ class GamesController < ApplicationController
         user: current_user.username,
         uuid: current_user.uuid,
         game_id: game.id,
-        partial: self.render(partial: 'rooms/game', locals: { game: game })
+        partial: self.render(partial: 'rooms/game', locals: { game: game, user: nil })
       head :ok
     else
       render status: 422,
