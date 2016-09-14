@@ -43,9 +43,9 @@ class Board
   def validate_move(a, b, x)
     raise ArgumentError,
           "#{x} is not :white or :black" if [:white, :black].exclude?(x)
-    raise TakenError, "#{a}:#{b} is taken" if taken?(a.to_i, b.to_i)
     raise GameOverError, 'Game is already over' if game_over?
     raise TurnError, "It is now #{@turn}'s turn" unless x == @turn
+    raise TakenError, "#{a}:#{b} is taken" if taken?(a.to_i, b.to_i)
   end
 
   def game_over?
