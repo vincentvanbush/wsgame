@@ -37,7 +37,8 @@ subscribe_messages = ->
           window.scroll_msgs_down()
 
       disconnected: (data) ->
-        alert('Connection lost!')
+        alert 'Connection lost, will try to reconnect automatically'
+        subscribe_messages()
     )
 
 $ ->
