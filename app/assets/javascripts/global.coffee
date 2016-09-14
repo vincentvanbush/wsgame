@@ -1,9 +1,9 @@
 $ ->
-  @msgs = ->
+  window.msgs = ->
     $('#messages')
 
-  @scroll_msgs_down = ->
-    @msgs().scrollTop(@msgs().prop('scrollHeight'))
+  window.scroll_msgs_down = ->
+    window.msgs().scrollTop(window.msgs().prop('scrollHeight'))
 
   # Capture ajax errors in remote forms/links specified by .capture-error
   $('.capture-error').on 'ajax:error', (e, xhr, status) ->

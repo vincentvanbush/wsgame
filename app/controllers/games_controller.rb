@@ -34,6 +34,7 @@ class GamesController < ApplicationController
     ensure_user_is_player
     x, y = move_params[:x], move_params[:y]
     @game.board[x, y] = current_color
+    @game.game_over = true if @game.board.game_over?
     @game.save!
     ActionCable.server.broadcast "game_#{@game.id}",
       msg_type: 'move',
@@ -46,6 +47,11 @@ class GamesController < ApplicationController
     ActionCable.server.broadcast "private_user:#{current_user.uuid}",
       msg_type: 'illegal_move',
       message: e.message
+    head 422
+  rescue ActiveRecord::RecordInvalid => invalid
+    ActionCable.server.broadcast "private_user:#{current_user.uuid}",
+      msg_type: 'illegal_move',
+      message: invalid.record.errors.full_messages.to_sentence
     head 422
   end
 

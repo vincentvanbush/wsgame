@@ -1,7 +1,11 @@
-messages_subscribed = false
 subscribe_messages = ->
   room_id = $('#room_id').val()
   uuid = $('#user_uuid').val()
+
+  if App.messages
+    App.cable.subscriptions.remove(App.messages)
+    App.messages.unsubscribe()
+    App.messages = undefined
 
   if room_id && uuid
     App.messages = App.cable.subscriptions.create(
@@ -31,12 +35,11 @@ subscribe_messages = ->
     )
 
 $ ->
-  @scroll_msgs_down()
-  if App.messages
-    App.cable.subscriptions.remove(App.messages)
+  window.scroll_msgs_down()
   subscribe_messages()
 
+
+
 $(document).on 'turbolinks:load', ->
-  if App.messages
-    App.cable.subscriptions.remove(App.messages)
+  window.scroll_msgs_down()
   subscribe_messages()

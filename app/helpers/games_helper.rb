@@ -16,7 +16,7 @@ module GamesHelper
     if game.can_be_joined? && !user.in_game?
       link_to 'Spectate or join', game
     elsif game.players.include?(user)
-      link_to 'Return to game', game
+      link_to game.players.first.to_s + ' ' + game.players.second.to_s + ' ' + current_user.to_s + ' ' + 'Return to game', game
     else
       link_to 'Spectate', game
     end
