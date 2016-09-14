@@ -29,7 +29,7 @@ subscribe_messages = ->
           else
             $('#games > .row').append(data.partial)
         else if data.msg_type == 'update_game'
-          # TODO
+          $("[data-game='#{data.game_id}']").replaceWith(data.partial)
         else if data.msg_type == 'delete_game'
           $("[data-game='#{data.game_id}']").remove()
         else

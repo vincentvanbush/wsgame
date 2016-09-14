@@ -106,9 +106,16 @@ class GamesController < ApplicationController
                 end
     if free_slot
       @game.update(free_slot => current_user)
+      # tell the other player and spectators
       ActionCable.server.broadcast "game_#{@game.id}",
         msg_type: 'join',
         user: current_user.username
+      # notify everyone in the room
+      ActionCable.server.broadcast "messages_room:#{@room.id}",
+        msg_type: 'update_game',
+        message: '___game updated___',
+        game_id: @game.id,
+        partial: self.render(partial: 'rooms/game', locals: { game: @game, user: nil })
     end
   end
 end
