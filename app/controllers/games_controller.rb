@@ -31,6 +31,7 @@ class GamesController < ApplicationController
 
   def push_move
     @game = Game.find(params[:id])
+    ensure_user_is_player
     x, y = move_params[:x], move_params[:y]
     @game.board[x, y] = current_color
     @game.save!
@@ -63,6 +64,9 @@ class GamesController < ApplicationController
     @user = current_user
     @message = Message.new
     @room = @game.room
+    join_or_spectate
+  rescue ActiveRecord::RecordNotFound
+    redirect_to rooms_path
   end
 
   private
@@ -73,5 +77,24 @@ class GamesController < ApplicationController
 
   def current_color
     current_user.id == @game.player1_id ? :white : :black
+  end
+
+  def ensure_user_is_player
+    if [@game.player1_id, @game.player2_id].exclude?(current_user.id)
+      raise SpectatorMoveError,
+            'As a spectator you can only watch the game'
+    end
+
+    if @game.players.size < 2
+      raise NoPlayerError, 'Please wait for another player'
+    end
+  end
+
+  def join_or_spectate
+    if @game.player1.blank? && !current_user.in_game?
+      @game.update(player1: current_user)
+    elsif @game.player2.blank? && !current_user.in_game?
+      @game.update(player2: current_user)
+    end
   end
 end

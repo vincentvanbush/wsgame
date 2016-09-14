@@ -33,6 +33,8 @@ class Game < ApplicationRecord
 
   def users_in_one_game
     return unless ['player1', 'player2'].any? { |f| send("#{f}_id_changed?")}
-    errors.add(:base,'Cannot join more than one game at a time') if players.any?(&:in_game?)
+    errors.add(:base,'Cannot join more than one game at a time') if players.any? do |player|
+      player.in_game? && player.current_game.id != self.id
+    end
   end
 end

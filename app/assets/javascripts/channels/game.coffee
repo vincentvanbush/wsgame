@@ -1,5 +1,8 @@
-$ ->
+$(document).on 'turbolinks:load', ->
   game_id = $('#game_id').val()
+
+  if App.game
+    App.cable.subscriptions.remove(App.game)
 
   if game_id
     App.game = App.cable.subscriptions.create(

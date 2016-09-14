@@ -25,6 +25,7 @@ class Board
             'Inner hashes must have integer keys and :white/:black values'
     end
 
+    @turn = :white
     @board_hash = board_hash
   end
 
@@ -34,6 +35,7 @@ class Board
 
   def []=(a, b, x)
     validate_move(a.to_i, b.to_i, x)
+    switch_turn!
     @board_hash[a.to_i] ||= []
     @board_hash[a.to_i][b.to_i] = x
   end
@@ -43,6 +45,7 @@ class Board
           "#{x} is not :white or :black" if [:white, :black].exclude?(x)
     raise TakenError, "#{a}:#{b} is taken" if taken?(a.to_i, b.to_i)
     raise GameOverError, 'Game is already over' if game_over?
+    raise TurnError, "It is now #{@turn}'s turn" unless x == @turn
   end
 
   def game_over?
@@ -89,5 +92,9 @@ class Board
 
   def all_xy_pairs
     (0...MAX * MAX).map { |x| [x / MAX, x % MAX] }
+  end
+
+  def switch_turn!
+    @turn = @turn == :white ? :black : :white
   end
 end
