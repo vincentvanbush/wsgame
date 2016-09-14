@@ -15,11 +15,15 @@ subscribe_game = ->
       }
 
       received: (data) ->
-        window.game.drawStone data.color,
-          x: data.x
-          y: data.y
-        if data.game_over
-          alert("Game over - #{data.winner} wins!")
+        console.log data.msg_type
+        if data.msg_type == 'move'
+          window.game.drawStone data.color,
+            x: data.x
+            y: data.y
+          if data.game_over
+            alert("Game over - #{data.winner} wins!")
+        else if data.msg_type == 'join'
+          $('#messages').append("<p class='errmsg'>#{data.user} joins the game</p>")
     )
 
 $(document).on 'turbolinks:load', ->

@@ -99,10 +99,16 @@ class GamesController < ApplicationController
   end
 
   def join_or_spectate
-    if @game.player1.blank? && !current_user.in_game?
-      @game.update(player1: current_user)
-    elsif @game.player2.blank? && !current_user.in_game?
-      @game.update(player2: current_user)
+    free_slot = if @game.player1.blank? && !current_user.in_game?
+                  :player1
+                elsif @game.player2.blank? && !current_user.in_game?
+                  :player2
+                end
+    if free_slot
+      @game.update(free_slot => current_user)
+      ActionCable.server.broadcast "game_#{@game.id}",
+        msg_type: 'join',
+        user: current_user.username
     end
   end
 end
