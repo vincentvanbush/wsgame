@@ -37,7 +37,7 @@ subscribe_messages = ->
           window.scroll_msgs_down()
 
       disconnected: (data) ->
-        alert('ebin')
+        alert('Connection lost!')
     )
 
 $ ->

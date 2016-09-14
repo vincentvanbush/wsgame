@@ -41,7 +41,9 @@ class GamesController < ApplicationController
       user: current_user.username,
       color: current_color,
       x: x,
-      y: y
+      y: y,
+      game_over: @game.game_over?,
+      winner: @game.board.winner
     head :no_content
   rescue GameError => e
     ActionCable.server.broadcast "private_user:#{current_user.uuid}",
