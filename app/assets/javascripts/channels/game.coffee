@@ -22,7 +22,7 @@ subscribe_game = ->
           if data.game_over
             alert("Game over - #{data.winner} wins!")
         else if data.msg_type == 'join'
-          $('#messages').append("<p class='errmsg'>#{data.user} joins the game</p>")
+          $('#messages').append("<p class='errmsg'>#{data.user} joins the game. You can start!</p>")
         else if data.msg_type == 'leave'
           $('#messages').append("<p class='errmsg'>#{data.user} leaves the game</p>")
         
