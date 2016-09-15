@@ -1,19 +1,13 @@
 class GamesController < ApplicationController
   def create
-    room = Room.find_by!(name: params[:room_name])
-    game = room.games.new(player1: current_user)
-    if game.save
-      ActionCable.server.broadcast "messages_room:#{room.id}",
-        msg_type: 'new_game',
-        message: '___new game created___',
-        user: current_user.username,
-        uuid: current_user.uuid,
-        game_id: game.id,
-        partial: self.render(partial: 'rooms/game', locals: { game: game, user: nil })
+    @room = Room.find_by!(name: params[:room_name])
+    @game = @room.games.new(player1: current_user)
+    if @game.save
+      cable_game_created
       head :ok
     else
       render status: 422,
-             json: { error: game.errors.full_messages.to_sentence }
+             json: { error: @game.errors.full_messages.to_sentence }
     end
   end
 
@@ -33,24 +27,13 @@ class GamesController < ApplicationController
     @game.board[x, y] = current_color
     @game.game_over = true if @game.board.game_over?
     @game.save!
-    ActionCable.server.broadcast "game_#{@game.id}",
-      msg_type: 'move',
-      user: current_user.username,
-      color: current_color,
-      x: x,
-      y: y,
-      game_over: @game.game_over?,
-      winner: @game.board.winner
+    cable_move(x, y)
     head :no_content
   rescue GameError => e
-    ActionCable.server.broadcast "private_user:#{current_user.uuid}",
-      msg_type: 'illegal_move',
-      message: e.message
+    cable_illegal_move(e.message)
     head 422
   rescue ActiveRecord::RecordInvalid => invalid
-    ActionCable.server.broadcast "private_user:#{current_user.uuid}",
-      msg_type: 'illegal_move',
-      message: invalid.record.errors.full_messages.to_sentence
+    cable_illegal_move(invalid.record.errors.full_messages.to_sentence)
     head 422
   end
 
@@ -125,9 +108,7 @@ class GamesController < ApplicationController
     if free_slot
       @game.update(free_slot => current_user)
       # tell the other player and spectators
-      ActionCable.server.broadcast "game_#{@game.id}",
-        msg_type: 'join',
-        user: current_user.username
+      cable_game_join
       # notify everyone in the room
       cable_game_update
     end
@@ -147,5 +128,38 @@ class GamesController < ApplicationController
       message: '___game deleted___',
       user: current_user.username,
       game_id: @game.id
+  end
+
+  def cable_game_join
+    ActionCable.server.broadcast "game_#{@game.id}",
+      msg_type: 'join',
+      user: current_user.username
+  end
+
+  def cable_illegal_move(msg)
+    ActionCable.server.broadcast "private_user:#{current_user.uuid}",
+      msg_type: 'illegal_move',
+      message: msg
+  end
+
+  def cable_move(x, y)
+    ActionCable.server.broadcast "game_#{@game.id}",
+      msg_type: 'move',
+      user: current_user.username,
+      color: current_color,
+      x: x,
+      y: y,
+      game_over: @game.game_over?,
+      winner: @game.board.winner
+  end
+
+  def cable_game_created
+    ActionCable.server.broadcast "messages_room:#{@room.id}",
+      msg_type: 'new_game',
+      message: '___new game created___',
+      user: current_user.username,
+      uuid: current_user.uuid,
+      game_id: @game.id,
+      partial: self.render(partial: 'rooms/game', locals: { game: @game, user: nil })
   end
 end
