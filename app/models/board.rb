@@ -1,5 +1,5 @@
 class Board
-  include ActiveModel::Validations
+  attr_accessor :turn
 
   MAX = 15
   LEN = 5

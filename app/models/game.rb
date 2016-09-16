@@ -34,6 +34,13 @@ class Game < ApplicationRecord
     [player1, player2].compact
   end
 
+  def current_player
+    case board.turn
+    when :white then player1
+    when :black then player2
+    end
+  end
+
   def leave!(user)
     leaving_player = if user.id == player1_id
                        :player1

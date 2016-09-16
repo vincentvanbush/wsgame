@@ -1,0 +1,11 @@
+.panel.panel-primary#scoreboard
+  .panel-heading.text-center
+    %span{ style: 'color: white' }
+      %strong= game.player1&.username
+    - if game.players.size == 2
+      %span{ style: 'color: skyblue' } vs
+    %span{ style: 'color: black' }
+      %strong= game.player2&.username
+  .panel-body.text-center
+    Now playing:
+    %strong= game.current_player.username

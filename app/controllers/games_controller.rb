@@ -63,9 +63,7 @@ class GamesController < ApplicationController
     @user = current_user
     if @game.leave!(@user)
       # tell the other player and spectators
-      ActionCable.server.broadcast "game_#{@game.id}",
-        msg_type: 'leave',
-        user: current_user.username
+      cable_game_leave
       # notify room
       if @game.destroyed?
         cable_game_destroy
@@ -133,7 +131,8 @@ class GamesController < ApplicationController
   def cable_game_join
     ActionCable.server.broadcast "game_#{@game.id}",
       msg_type: 'join',
-      user: current_user.username
+      user: current_user.username,
+      scoreboard_partial: ApplicationController.render(partial: 'games/scoreboard', locals: { game: @game })
   end
 
   def cable_illegal_move(msg)
@@ -150,7 +149,8 @@ class GamesController < ApplicationController
       x: x,
       y: y,
       game_over: @game.game_over?,
-      winner: @game.board.winner
+      winner: @game.board.winner,
+      scoreboard_partial: ApplicationController.render(partial: 'games/scoreboard', locals: { game: @game })
   end
 
   def cable_game_created
@@ -160,6 +160,13 @@ class GamesController < ApplicationController
       user: current_user.username,
       uuid: current_user.uuid,
       game_id: @game.id,
-      partial: self.render(partial: 'rooms/game', locals: { game: @game, user: nil })
+      partial: ApplicationController.render(partial: 'rooms/game', locals: { game: @game, user: nil })
+  end
+
+  def cable_game_leave
+    ActionCable.server.broadcast "game_#{@game.id}",
+      msg_type: 'leave',
+      user: current_user.username,
+      scoreboard_partial: ApplicationController.render(partial: 'games/scoreboard', locals: { game: @game })
   end
 end

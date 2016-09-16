@@ -15,6 +15,7 @@ subscribe_game = ->
       }
 
       received: (data) ->
+        $('#scoreboard').replaceWith(data.scoreboard_partial) if data.scoreboard_partial
         if data.msg_type == 'move'
           window.game.drawStone data.color,
             x: data.x
@@ -25,7 +26,7 @@ subscribe_game = ->
           $('#messages').append("<p class='errmsg'>#{data.user} joins the game. You can start!</p>")
         else if data.msg_type == 'leave'
           $('#messages').append("<p class='errmsg'>#{data.user} leaves the game</p>")
-        
+
     )
 
 $(document).on 'turbolinks:load', ->

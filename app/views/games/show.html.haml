@@ -20,4 +20,5 @@
       .panel-body.text-center
         %canvas#gomoku-board
   .col-md-4
+    = render partial: 'games/scoreboard', locals: { game: @game }
     = render partial: 'rooms/chat'

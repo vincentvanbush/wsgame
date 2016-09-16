@@ -8,7 +8,7 @@ module GamesHelper
   end
 
   def game_heading(game)
-    [game.player1, game.player2].
+    "[##{game.id}] " + [game.player1, game.player2].
       compact.to_sentence(two_words_connector: ' vs. ')
   end
 
