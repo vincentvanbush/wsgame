@@ -13,6 +13,7 @@
         %strong= game.board.winner
       - elsif game.players.size == 2
         Now playing:
-        %strong= game.current_player.username
+        %strong= "#{game.current_player.username} (#{game.board.turn})"
+
       - else
         Waiting for opponent...

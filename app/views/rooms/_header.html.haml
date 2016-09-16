@@ -1,4 +1,8 @@
 .row
-  .col-md-12
+  .col-md-8
     %h1= @room.name
     = link_to 'Rooms', rooms_path
+  .col-md-4
+    %h3.pull-right
+      Welcome,
+      %strong= "#{current_user.username}!"
