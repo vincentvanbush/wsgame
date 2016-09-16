@@ -13,16 +13,14 @@
           Create Game
       .panel-body#games
         .row
-          - if @games.present?
-            = render partial: 'game', collection: @games, locals: { user: current_user }
-          - else
-            .text-center
-              No games in
-              %strong #{@room.name}
-              yet. Why not
-              %strong
-                = link_to room_games_path(room_name: @room.name), method: :post, remote: true do
-                  create one
-              just now?
+          = render partial: 'game', collection: @games, locals: { user: current_user }
+          .text-center.no-games{ style: "display: #{@games.present? ? 'none' : 'block'}" }
+            No games in
+            %strong #{@room.name}
+            yet. Why not
+            %strong
+              = link_to room_games_path(room_name: @room.name), method: :post, remote: true do
+                create one
+            just now?
   .col-md-4
     = render partial: 'chat'

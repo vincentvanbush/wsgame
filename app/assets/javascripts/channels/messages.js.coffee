@@ -27,11 +27,14 @@ subscribe_messages = ->
           if data.uuid == uuid
             Turbolinks.visit("/games/#{data.game_id}")
           else
+            $('.no-games').hide()
             $('#games > .row').append(data.partial)
         else if data.msg_type == 'update_game'
           $("[data-game='#{data.game_id}']").replaceWith(data.partial)
         else if data.msg_type == 'delete_game'
           $("[data-game='#{data.game_id}']").remove()
+          if $('.game-cell').length == 0
+            $('.no-games').show()
         else
           $('#messages').append("<p><b>#{data.user}</b>: #{data.message}</p>")
           window.scroll_msgs_down()
