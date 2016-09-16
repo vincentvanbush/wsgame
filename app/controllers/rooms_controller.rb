@@ -4,6 +4,7 @@ class RoomsController < ApplicationController
   def show
     @room = Room.find_by!(name: params[:name])
     @user = current_user
+    @games = @room.games.active
     @message = Message.new
   end
 
