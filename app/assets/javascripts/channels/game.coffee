@@ -1,5 +1,9 @@
 window.blink = (selector, counter = 0) ->
   return if counter >= 10
+  if counter == 0
+    $(selector).stop()
+    clearTimeout(window.blinkTimeout) if window.blinkTimeout
+    $(selector).css('opacity', '1')
   new_opacity = if $(selector).css('opacity') == '1'
                   '0'
                 else
@@ -7,7 +11,7 @@ window.blink = (selector, counter = 0) ->
   $('.blink-after-move').animate
     opacity: new_opacity
     100
-    -> setTimeout(->
+    -> window.blinkTimeout = setTimeout(->
          blink(selector, counter + 1)
        300)
 
@@ -32,6 +36,7 @@ subscribe_game = ->
           $('#scoreboard').replaceWith(data.scoreboard_partial)
           blink('.blink-after-move')
         if data.msg_type == 'move'
+          window.notifSound.play()
           window.game.drawStone data.color,
             x: data.x
             y: data.y
@@ -40,8 +45,10 @@ subscribe_game = ->
           if data.winning_coords
             window.game.markWin data.winning_coords, data.winner
         else if data.msg_type == 'join'
+          window.notifSound.play()
           $('#messages').append("<p class='errmsg'>#{data.user} joins the game. You can start!</p>")
         else if data.msg_type == 'leave'
+          window.notifSound.play()
           $('#messages').append("<p class='errmsg'>#{data.user} leaves the game</p>")
 
     )

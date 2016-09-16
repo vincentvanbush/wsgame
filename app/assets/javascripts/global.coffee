@@ -1,4 +1,6 @@
 $ ->
+  window.notifSound = new Audio('/notification.wav')
+
   window.msgs = ->
     $('#messages')
 
