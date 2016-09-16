@@ -40,10 +40,10 @@ subscribe_game = ->
           window.game.drawStone data.color,
             x: data.x
             y: data.y
-          if data.game_over
-            alert("Game over - #{data.winner} wins!")
           if data.winning_coords
             window.game.markWin data.winning_coords, data.winner
+          if data.game_over
+            alert("Game over - #{data.winner} wins!")
         else if data.msg_type == 'join'
           window.notifSound.play()
           $('#messages').append("<p class='errmsg'>#{data.user} joins the game. You can start!</p>")
