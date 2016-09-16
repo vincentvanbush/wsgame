@@ -1,7 +1,7 @@
 gameReady = ->
   $('.in-game-remove').on 'ajax:success', ->
     Turbolinks.visit("/rooms/#{$('#room_name').val()}")
- 
+
   game_id = $('#game_id').val()
   $canvas = $('#gomoku-board')
 
@@ -31,7 +31,7 @@ class Game
     @context = @canvas.getContext('2d')
     @drawBoard()
     @pullBoard()
-    $(@canvas).on 'click', (e) -> 
+    $(@canvas).on 'click', (e) ->
       coords = getCoords(this, e)
       self.pushMove(coords)
       # window.game.drawStone('white', coords)
@@ -96,13 +96,19 @@ class Game
     radius = 18
 
     gradient = @context.createRadialGradient stonePos.x, stonePos.y, innerRadius, stonePos.x, stonePos.y, outerRadius
-    
+
     if color == 'white'
       gradient.addColorStop 0, 'white'
       gradient.addColorStop 1, 'gray'
-    else
+    else if color == 'black'
       gradient.addColorStop 0, '#444444'
       gradient.addColorStop 1, 'black'
+    else if color == 'white_win'
+      gradient.addColorStop 0, 'yellow'
+      gradient.addColorStop 1, 'red'
+    else if color == 'black_win'
+      gradient.addColorStop 0, 'blue'
+      gradient.addColorStop 1, 'navy'
 
     @context.fillStyle = gradient
     @context.beginPath()
@@ -110,7 +116,9 @@ class Game
     @context.fill()
     @context.closePath()
 
+  markWin: (coordList, winningColor) ->
+    console.log winningColor
+    @drawStone("#{winningColor}_win", item) for item in coordList
 
 $(document).on 'turbolinks:load', ->
   gameReady()
-

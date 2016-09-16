@@ -59,21 +59,31 @@ class Board
       flatten.each_slice(2).to_a
   end
 
-  def winner
+  def winning_coords
     # This is very suboptimal but who cares lol
     all_xy_pairs.each do |coords|
       startx, starty = coords
       v = self[startx, starty]
       next if v.nil?
-      horiz = (0..4).map { |i| self[startx, starty + i] }
-      vert = (0..4).map { |i| self[startx + i, starty] }
-      diag1 = (0..4).map { |i| self[startx + i, starty + i] }
-      diag2 = (0..4).map { |i| self[startx + i, starty - i] }
-      if [horiz, vert, diag1, diag2].any? { |list| list.all? { |x| x == v } }
-        return v
+      rows = {
+        vert: ->(i) { [startx, starty + i] },
+        horiz: ->(i) { [startx + i, starty] },
+        diag1: ->(i) { [startx + i, starty + i] },
+        diag2: ->(i) { [startx + i, starty - i] }
+      }
+      rows.each do |dir, arg|
+        if (0..4).map { |i| self[*(arg.call(i))] }.all? { |x| x == v }
+          return (0..4).map { |i| arg.call(i) }
+        end
       end
     end
     nil
+  end
+
+  def winner
+    if coords = winning_coords
+      self[*coords[0]]
+    end
   end
 
   def free?(a, b)

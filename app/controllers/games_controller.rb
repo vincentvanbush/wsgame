@@ -142,13 +142,15 @@ class GamesController < ApplicationController
   end
 
   def cable_move(x, y)
+    game_over = @game.game_over?
     ActionCable.server.broadcast "game_#{@game.id}",
       msg_type: 'move',
       user: current_user.username,
       color: current_color,
       x: x,
       y: y,
-      game_over: @game.game_over?,
+      game_over: game_over,
+      winning_coords: game_over ? @game.board.winning_coords.map { |c| { x: c.first, y: c.second } } : nil,
       winner: @game.board.winner,
       scoreboard_partial: ApplicationController.render(partial: 'games/scoreboard', locals: { game: @game })
   end
