@@ -10,7 +10,7 @@
 #  player1_id :integer
 #  player2_id :integer
 #  board      :text
-#  game_over  :boolean
+#  game_over  :boolean          default(FALSE)
 #
 
 class Game < ApplicationRecord
