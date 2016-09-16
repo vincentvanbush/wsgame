@@ -1,5 +1,5 @@
 gameReady = ->
-  $('.in-game-remove').on 'ajax:success', ->
+  $('.game-leave-link').on 'ajax:success', ->
     Turbolinks.visit("/rooms/#{$('#room_name').val()}")
 
   game_id = $('#game_id').val()
@@ -65,6 +65,7 @@ class Game
     bh = 718
     @canvas.width = bw
     @canvas.height = bh
+    @context.clearRect 0, 0, @canvas.width, @canvas.height
     @p = 23.9333
     cw = bw + (@p*2) + 1
     ch = bh + (@p*2) + 1

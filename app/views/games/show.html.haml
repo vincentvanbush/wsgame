@@ -14,9 +14,12 @@
           See
           %b= @room.name
         - if [@game.player1, @game.player2].include? current_user
-          = link_to leave_game_path(@game), method: :patch, class: 'in-game-remove pull-right btn btn-warning btn-xs btn-default' do
+          = link_to leave_game_path(@game), method: :patch, style: "display: #{@game.game_over? ? 'none' : 'inline-block'}", class: 'game-leave-link pull-right btn btn-warning btn-xs btn-default' do
             %span.glyphicon.glyphicon-remove
             Leave
+          = link_to restart_game_path(@game), method: :patch, remote: true, style: "display: #{@game.game_over? ? 'inline-block' : 'none'}", class: 'game-restart-link pull-right btn btn-success btn-xs btn-default' do
+            %span.glyphicon.glyphicon-play
+            Replay
       .panel-body.text-center
         %canvas#gomoku-board
   .col-md-4

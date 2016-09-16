@@ -43,14 +43,21 @@ subscribe_game = ->
           if data.winning_coords
             window.game.markWin data.winning_coords, data.winner
           if data.game_over
-            alert("Game over - #{data.winner} wins!")
+            $('#messages').append("<p class='errmsg'>#{data.user} (#{data.winner}) wins the game! Click Replay to start again.</p>")
+            $('.game-leave-link').hide()
+            $('.game-restart-link').show()
         else if data.msg_type == 'join'
           window.notifSound.play()
           $('#messages').append("<p class='errmsg'>#{data.user} joins the game. You can start!</p>")
         else if data.msg_type == 'leave'
           window.notifSound.play()
           $('#messages').append("<p class='errmsg'>#{data.user} leaves the game</p>")
-
+        else if data.msg_type == 'restart'
+          window.game.drawBoard()
+          window.notifSound.play()
+          $('#messages').append("<p class='errmsg'>Replaying - let's go and have fun!</p>")
+          $('.game-leave-link').show()
+          $('.game-restart-link').hide()
     )
 
 $(document).on 'turbolinks:load', ->

@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     member do
       post :push_move
       patch :leave
+      patch :restart
       get :board
     end
   end

@@ -76,6 +76,20 @@ class GamesController < ApplicationController
     end
   end
 
+  def restart
+    @game = Game.find(params[:id])
+    if !@game.game_over?
+      head 422
+    elsif @game.players.exclude? current_user
+      head 401
+    elsif @game.update(board: Board.new, game_over: false)
+      cable_game_restart
+      head 200
+    else
+      head 422
+    end
+  end
+
   private
 
   def move_params
@@ -170,5 +184,11 @@ class GamesController < ApplicationController
       msg_type: 'leave',
       user: current_user.username,
       scoreboard_partial: ApplicationController.render(partial: 'games/scoreboard', locals: { game: @game })
+  end
+
+  def cable_game_restart
+    ActionCable.server.broadcast "game_#{@game.id}",
+      msg_type: 'restart'
+
   end
 end
