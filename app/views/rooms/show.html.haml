@@ -12,6 +12,6 @@
           %span.glyphicon.glyphicon-plus
           Create Game
       .panel-body#games
-        .row= render partial: 'game', collection: @room.games.not_over, locals: { user: current_user }
+        .row= render partial: 'game', collection: @room.games.active, locals: { user: current_user }
   .col-md-4
     = render partial: 'chat'

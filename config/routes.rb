@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       patch :leave
       patch :restart
       get :board
+      get :stale_query
     end
   end
 end

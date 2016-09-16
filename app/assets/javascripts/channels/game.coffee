@@ -32,6 +32,7 @@ subscribe_game = ->
       }
 
       received: (data) ->
+        window.game.resetStaleTimeout()
         if data.scoreboard_partial
           $('#scoreboard').replaceWith(data.scoreboard_partial)
           blink('.blink-after-move')
@@ -55,6 +56,7 @@ subscribe_game = ->
         else if data.msg_type == 'restart'
           window.game.drawBoard()
           window.notifSound.play()
+          window.game.stale = false
           $('#messages').append("<p class='errmsg'>Replaying - let's go and have fun!</p>")
           $('.game-leave-link').show()
           $('.game-restart-link').hide()

@@ -90,6 +90,11 @@ class GamesController < ApplicationController
     end
   end
 
+  def stale_query
+    game = Game.find(params[:id])
+    render json: game.stale? ? 1 : 0
+  end
+
   private
 
   def move_params

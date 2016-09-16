@@ -30,6 +30,6 @@ class User < ApplicationRecord
   private
 
   def current_games
-    Game.not_over.where('player1_id = ? or player2_id = ?', id, id)
+    Game.active.where('player1_id = ? or player2_id = ?', id, id)
   end
 end

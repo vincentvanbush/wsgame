@@ -3,10 +3,11 @@ gameReady = ->
     Turbolinks.visit("/rooms/#{$('#room_name').val()}")
 
   game_id = $('#game_id').val()
+  game_stale = parseInt($('#game_stale').val())
   $canvas = $('#gomoku-board')
 
   if $canvas.length
-    @game = new Game(game_id, $canvas.get(0))
+    @game = new Game(game_id, $canvas.get(0), game_stale)
 
 getMousePos = (canvas, evt) ->
   rect = canvas.getBoundingClientRect()
@@ -27,14 +28,35 @@ getCoords = (canvas, evt) ->
 
 class Game
   self = this
-  constructor: (@id, @canvas) ->
+  constructor: (@id, @canvas, @stale) ->
     @context = @canvas.getContext('2d')
     @drawBoard()
     @pullBoard()
+    @resetStaleTimeout()
+
     $(@canvas).on 'click', (e) ->
-      coords = getCoords(this, e)
-      self.pushMove(coords)
+      unless window.game.stale
+        coords = getCoords(this, e)
+        self.pushMove(coords)
       # window.game.drawStone('white', coords)
+
+  checkIfStale: (id) ->
+    $.ajax
+      method: 'GET'
+      url: "/games/#{id}/stale_query"
+      success: (stale) ->
+        if stale
+          window.blink('.blink-after-move')
+          window.notifSound.play()
+          window.game.stale = true
+          $('.blink-after-move').text('Game archived (no activity)')
+
+  resetStaleTimeout: ->
+    self = this
+    clearTimeout(@staleTimeout) if @staleTimeout
+    setTimeout(->
+      self.checkIfStale(self.id)
+    1000 * 60 * 3)
 
   pushMove: (coords) ->
     $.ajax

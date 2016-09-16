@@ -20,11 +20,14 @@ class Game < ApplicationRecord
 
   validates :state, presence: true, inclusion: { in: %w(idle started) }
   validate :users_in_one_game
+  validate :dont_touch_archived_games, if: proc { |g| g.stale? }
 
   serialize :board, Board
 
   scope :not_over, -> { where(game_over: false) }
   scope :over, -> { where(game_over: true) }
+  scope :not_stale, -> { where('updated_at > ?', 3.minutes.ago) }
+  scope :active, -> { not_over.not_stale }
 
   def can_be_joined?
     state == 'idle' && (player1.blank? || player2.blank?)
@@ -52,6 +55,10 @@ class Game < ApplicationRecord
     left
   end
 
+  def stale?
+    (updated_at || Time.current) < 3.minutes.ago
+  end
+
   private
 
   def users_in_one_game
@@ -59,5 +66,9 @@ class Game < ApplicationRecord
     errors.add(:base,'Cannot join more than one game at a time') if players.any? do |player|
       player.in_game? && player.current_game.id != self.id
     end
+  end
+
+  def dont_touch_archived_games
+    errors.add(:base, 'This game has been archived because of inactivity for more than 3 minutes.')
   end
 end
