@@ -92,7 +92,7 @@ class GamesController < ApplicationController
 
   def stale_query
     game = Game.find(params[:id])
-    render json: game.stale? ? 1 : 0
+    render json: (game.stale? && !game.game_over?) ? 1 : 0
   end
 
   private
