@@ -27,6 +27,17 @@ class User < ApplicationRecord
     current_game.present?
   end
 
+  def join_or_spectate!(game)
+    free_slot = if game.player1.blank? && !self.in_game?
+                  :player1
+                elsif game.player2.blank? && !self.in_game?
+                  :player2
+                end
+    if free_slot
+      game.update(free_slot => self)
+    end
+  end
+
   private
 
   def current_games

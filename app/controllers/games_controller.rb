@@ -117,13 +117,7 @@ class GamesController < ApplicationController
   end
 
   def join_or_spectate
-    free_slot = if @game.player1.blank? && !current_user.in_game?
-                  :player1
-                elsif @game.player2.blank? && !current_user.in_game?
-                  :player2
-                end
-    if free_slot
-      @game.update(free_slot => current_user)
+    if current_user.join_or_spectate!(@game)
       # tell the other player and spectators
       cable_game_join
       # notify everyone in the room
